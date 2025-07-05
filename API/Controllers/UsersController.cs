@@ -85,7 +85,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
         if (photo == null)
             return NotFound();
 
-        if (photo.IsMain||photo ==null)
+        if (photo.IsMain || photo == null)
             return BadRequest("Cannot use this as main photo");
 
         var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
@@ -98,6 +98,26 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
             return NoContent();
 
         return BadRequest("Problem setting main photo");
+    }
+    [HttpDelete("delete-photo/{photoId:int}")]
+    public async Task<ActionResult> DeletePhoto(int photoId)
+    {
+        var user = await userRepository.GetUserByUsernameAsync(User.GetUsername());
+        if (user == null) return BadRequest("User not found");
+
+        var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+        if (photo == null || photo.IsMain) return BadRequest("This photo cannot be deleted");
+
+        if (photo.PublicId != null)
+        {
+            var result = await photoService.DeletePhotoAsync(photo.PublicId);
+            if (result.Error != null) return BadRequest(result.Error.Message);
+        }
+
+        user.Photos.Remove(photo);
+        if (await userRepository.SaveAllAsync()) return Ok();
+
+        return BadRequest("Problem deleting photo");
     }
     
 }
