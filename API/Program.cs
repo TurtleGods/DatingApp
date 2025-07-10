@@ -25,7 +25,7 @@ using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 try
 {
-    var context = services.GetRequiredService<DataContext>();
+    var context = services.GetRequiredService<AppDbContext>();
     await context.Database.MigrateAsync();
     await Seed.SeedUsers(context);
 }

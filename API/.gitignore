@@ -45,3 +45,5 @@ msbuild.wrn
 appsettings.json
 appsettings.Development.json
 client/
+client2/
+API/dating.db*

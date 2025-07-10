@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
 
-    public class BuggyController (DataContext context): BaseApiController
+    public class BuggyController (AppDbContext context): BaseApiController
     {
         [Authorize]
         [HttpGet("auth")]
