@@ -12,5 +12,5 @@ public class RegisterDto
     public string Email { get; set; } = "";
     [Required]
     [MinLength(4)]
-    public string Password { get; set; }
+    public string Password { get; set; } = "";
 }

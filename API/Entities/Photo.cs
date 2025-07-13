@@ -10,6 +10,6 @@ public class Photo
     public bool IsMain { get; set; }
     public string? PublicId { get; set; }
     // Navigation properties
-    public int AppUserId { get; set; }
-    public AppUser AppUser { get; set; } = null!; // Ensure non-nullable reference type
+    public Member Member { get; set; } = null!; // Ensure non-nullable reference type
+    public string MemberId { get; set; } = null!;
 }
