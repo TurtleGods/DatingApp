@@ -10,7 +10,7 @@ namespace API.Data;
 
 public class MemberRepository(AppDbContext context,IMapper mapper) :IMemberRepository
 {
-    public async Task<Member?> GetMemberByIdAsync(int id)
+    public async Task<Member?> GetMemberByIdAsync(string id)
     {
         return await context.Members
             .FindAsync(id);

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace API.Entities;
 
@@ -10,6 +11,7 @@ public class Photo
     public bool IsMain { get; set; }
     public string? PublicId { get; set; }
     // Navigation properties
+    [JsonIgnore]
     public Member Member { get; set; } = null!; // Ensure non-nullable reference type
     public string MemberId { get; set; } = null!;
 }
