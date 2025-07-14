@@ -27,8 +27,7 @@ namespace API.Controllers
         public ActionResult<AppUser> GetServerError()
         {
             
-            var thing = context.Users.Find(-1) ?? throw new Exception("A bad thing has happened");
-            return thing;
+            throw new Exception("A bad thing has happened");
         }
         [HttpGet("bad-request")]
         public ActionResult<string> GetBadRequest()
