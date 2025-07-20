@@ -52,8 +52,4 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
         }
         return user.ToDto(tokenService);
     }
-    private async Task<bool> UserExists(string username)
-    {
-        return await context.Users.AnyAsync(x => x.DisplayName.ToLower() == username.ToLower()); //Bod !=bob
-    }
 }

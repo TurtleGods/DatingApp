@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class MemberRepository(AppDbContext context, IMapper mapper) : IMemberRepository
+public class MemberRepository(AppDbContext context) : IMemberRepository
 {
     public async Task<Member?> GetMemberByIdAsync(string id)
     {
