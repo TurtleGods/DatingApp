@@ -31,6 +31,10 @@ public class MemberRepository(AppDbContext context) : IMemberRepository
 
         query = query.Where(x => x.Id != memberParams.CurrentMemberId);
 
+        var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-memberParams.MaxAge - 1));
+        var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-memberParams.MinAge));
+
+        query = query.Where(x=>x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
         if (memberParams.Gender != null)
         {
             query = query.Where(x => x.Gender == memberParams.Gender);
