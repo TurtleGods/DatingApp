@@ -1,6 +1,7 @@
 using System;
 using System.Xml.Linq;
 using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,31 +32,35 @@ public class LikesRepository(AppDbContext context) : ILikesRepository
         return await context.Likes.FindAsync(sourceMemberId, TargetMemberId);
     }
 
-    public async Task<IReadOnlyList<Member>> GetMemberLikes(string predicate, string memberId)
+    public async Task<PaginatedResult<Member>> GetMemberLikes(LikesParams likesParams)
     {
         var query = context.Likes.AsQueryable();
+        IQueryable<Member> result;
 
-        switch (predicate)
+        switch (likesParams.Predicate)
         {
             case "liked":
-                return await query
-                        .Where(x => x.SourceMemberId == memberId)
-                        .Select(x => x.TargetMember)
-                        .ToListAsync();
+                result = query
+                    .Where(like => like.SourceMemberId == likesParams.MemberId)
+                    .Select(like => like.TargetMember);
+                break;
             case "likedBy":
-                return await query
-                        .Where(x => x.TargetMemberId == memberId)
-                        .Select(x => x.SourceMember)
-                        .ToListAsync();
-            default:// mutual
-                var likeIds = await GetCurrentMemberLikeIds(memberId);
+                result = query
+                    .Where(like => like.TargetMemberId == likesParams.MemberId)
+                    .Select(like => like.SourceMember);
+                break;
+            default: // mutual
+                var likeIds = await GetCurrentMemberLikeIds(likesParams.MemberId);
 
-                return await query
-                        .Where(x => x.TargetMemberId == memberId
+                result = query
+                    .Where(x => x.TargetMemberId == likesParams.MemberId
                         && likeIds.Contains(x.SourceMemberId))
-                        .Select(x => x.SourceMember)
-                        .ToListAsync();
+                    .Select(x => x.SourceMember);
+                break;
         }
+        
+        return await PaginationHelper.CreateAsync(result,
+            likesParams.PageNumber, likesParams.PageSize);
     }
 
     public async Task<bool> SaveALlChanges()
