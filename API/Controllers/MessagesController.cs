@@ -2,12 +2,13 @@ using System;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-public class MessagesController(IMessageRepository messageRepository,IMemberRepository memberRepository) : BaseApiController
+public class MessagesController(IMessageRepository messageRepository, IMemberRepository memberRepository) : BaseApiController
 {
     [HttpPost]
     public async Task<ActionResult<MessageDto>> CreateMessage(CreateMessageDto createMessageDto)
@@ -31,5 +32,13 @@ public class MessagesController(IMessageRepository messageRepository,IMemberRepo
         if (await messageRepository.SaveAllAsync()) return message.ToDto();
 
         return BadRequest("Failed to send message");
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResult<MessageDto>>> GetMessagesByContainer([FromQuery] MessageParams messageParams)
+    {
+        messageParams.MemberId = User.GetMemberId();
+
+        return await messageRepository.GetMessageForMember(messageParams);
     }
 }
