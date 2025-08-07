@@ -7,4 +7,7 @@ public class Group(string name)
 {
     [Key]
     public required string Name { get; set; } = name;
+
+    //nav properties
+    public ICollection<Connection> Connections { get; set; } = [];
 }
