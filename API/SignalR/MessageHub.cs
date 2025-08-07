@@ -11,17 +11,18 @@ using Microsoft.Extensions.Primitives;
 namespace API.SignalR;
 
 [Authorize]
-public class MessageHub(IMessageRepository messageRepository, MemberRepository memberRepository) : Hub
+public class MessageHub(IMessageRepository messageRepository, IMemberRepository memberRepository) : Hub
 {
     public override async Task OnConnectedAsync()
     {
         var httpContext = Context.GetHttpContext();
-        var otherUser = httpContext?.Request.Query["userId"].ToString() ?? throw new HubException("other user not found");
+        var otherUser = httpContext?.Request?.Query["userId"].ToString()
+            ?? throw new HubException("Other user not found");
         var groupName = GetGroupName(GetUserId(), otherUser);
-
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
         var messages = await messageRepository.GetMessageThread(GetUserId(), otherUser);
+
         await Clients.Group(groupName).SendAsync("ReceiveMessageThread", messages);
     }
 
