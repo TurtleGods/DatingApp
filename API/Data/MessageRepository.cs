@@ -12,7 +12,7 @@ public class MessageRepository(AppDbContext context) : IMessageRepository
 {
     public void AddGroup(Group group)
     {
-        context.Groups.Remove(group);
+        context.Groups.Add(group);
     }
 
     public void AddMessage(Message message)
