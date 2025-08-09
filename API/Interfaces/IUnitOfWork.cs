@@ -2,7 +2,7 @@ using System;
 
 namespace API.Interfaces;
 
-public interface INuitOfWork
+public interface IUnitOfWork
 {
     IMemberRepository MemberRepository{ get; }
     IMessageRepository MessageRepository{ get; }

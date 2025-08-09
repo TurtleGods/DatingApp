@@ -4,7 +4,7 @@ using API.Interfaces;
 
 namespace API.Data;
 
-public class UnitOfWork(AppDbContext context) : INuitOfWork
+public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
     private IMemberRepository? _memberRepository;
     private IMessageRepository? _messageRepository;
