@@ -47,3 +47,4 @@ appsettings.Development.json
 client/
 client2/
 dating.db*
+/wwwroot/
